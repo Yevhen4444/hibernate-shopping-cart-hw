@@ -9,7 +9,7 @@
             jdbc:mysql://localhost:3306/cinema_db?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC
         </property>
         <property name="hibernate.connection.username">cinema_user</property>
-        <property name="hibernate.connection.password">cinema_pass</property>
+        <property name="hibernate.connection.password">1111</property>
 
         <!-- SQL dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>

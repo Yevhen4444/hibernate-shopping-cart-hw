@@ -1,7 +1,5 @@
 package mate.academy.service.impl;
 
-import java.util.ArrayList;
-import java.util.Optional;
 import mate.academy.dao.ShoppingCartDao;
 import mate.academy.dao.TicketDao;
 import mate.academy.exception.DataProcessingException;
@@ -22,33 +20,33 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void addSession(MovieSession movieSession, User user) {
-        ShoppingCart cart = getByUser(user);
-        if (cart.getTickets() == null) {
-            cart.setTickets(new ArrayList<>());
-        }
+        ShoppingCart cart = shoppingCartDao.getByUser(user)
+                .orElseGet(() -> {
+                    ShoppingCart newCart = new ShoppingCart();
+                    newCart.setUser(user);
+                    return shoppingCartDao.add(newCart); // save() повертає кошик з id
+                });
+
         Ticket ticket = new Ticket();
         ticket.setMovieSession(movieSession);
         ticket.setUser(user);
-
+        ticket.setShoppingCart(cart);
         ticketDao.add(ticket);
-
         cart.getTickets().add(ticket);
         shoppingCartDao.update(cart);
     }
 
     @Override
     public ShoppingCart getByUser(User user) {
-        Optional<ShoppingCart> optionalCart = shoppingCartDao.getByUser(user);
-        ShoppingCart cart = optionalCart.orElseThrow(() ->
-        new DataProcessingException("ShoppingCart not found for user", null));
-        return cart;
+        return shoppingCartDao.getByUser(user)
+                .orElseThrow(() ->
+                        new DataProcessingException("ShoppingCart not found for user", null));
     }
 
     @Override
     public void registerNewShoppingCart(User user) {
         ShoppingCart cart = new ShoppingCart();
         cart.setUser(user);
-        cart.setTickets(new ArrayList<>());
         shoppingCartDao.add(cart);
     }
 
