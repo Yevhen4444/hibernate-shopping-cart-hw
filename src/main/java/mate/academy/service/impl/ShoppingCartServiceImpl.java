@@ -24,14 +24,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseGet(() -> {
                     ShoppingCart newCart = new ShoppingCart();
                     newCart.setUser(user);
-                    return shoppingCartDao.add(newCart); // save() повертає кошик з id
+                    return shoppingCartDao.add(newCart);
                 });
 
         Ticket ticket = new Ticket();
         ticket.setMovieSession(movieSession);
         ticket.setUser(user);
-        ticket.setShoppingCart(cart);
-        ticketDao.add(ticket);
         cart.getTickets().add(ticket);
         shoppingCartDao.update(cart);
     }
